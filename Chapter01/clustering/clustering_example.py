@@ -129,12 +129,12 @@ if __name__ == "__main__":
 
     # Create some nice plots with create_and_show_plot=True (in a notebook)
     X = df[['ride_dist', 'ride_time']]
-    
+
     logging.info('Clustering and labelling')
-    
+
     results = cluster_and_label(X, create_and_show_plot=True)
     df['label'] = results['labels']
-    
+
     # Output your results to json
     logging.info('Outputting to json ...')
     df.to_json('taxi-labels.json', orient='records')

@@ -10,10 +10,9 @@ from sklearn.model_selection import RandomizedSearchCV
 from imblearn.over_sampling import SMOTE
 
 
-def ingest_and_prep_data(
-        bank_dataset: str = 'bank_data/bank.csv'
-    ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    df = pd.read_csv('bank_data/bank.csv', delimiter=';', decimal=',')
+def ingest_and_prep_data(bank_dataset: str) -> (
+        tuple)[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    df = pd.read_csv(bank_dataset, delimiter=';', decimal=',')
     
     # Assume there was some EDA and feature analysis to select below
     feature_cols = ['job', 'marital', 'education', 'contact', 'housing', 'loan', 'default', 'day']
@@ -30,6 +29,7 @@ def ingest_and_prep_data(
     # Feature engineering
     enc = OneHotEncoder(handle_unknown='ignore')
     X_train = enc.fit_transform(X_train)
+    X_test = enc.transform(X_test)
     
     return X_train, X_test, y_train, y_test
 
@@ -82,7 +82,8 @@ def get_randomised_rf_cv(random_grid: dict) -> sklearn.model_selection._search.R
     
     
 if __name__ == "__main__":
-    X_train, X_test, y_train, y_test = ingest_and_prep_data()
+    bank_dataset = 'bank_data/bank.csv'
+    X_train, X_test, y_train, y_test = ingest_and_prep_data(bank_dataset)
     
     X_balanced, y_balanced = rebalance_classes(X_train, y_train)
     
