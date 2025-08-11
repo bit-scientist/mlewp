@@ -1,3 +1,21 @@
+import os
+os.environ['PYSPARK_SUBMIT_ARGS'] = (
+    '--add-opens java.base/java.lang=ALL-UNNAMED '
+    '--add-opens java.base/java.lang.invoke=ALL-UNNAMED '
+    '--add-opens java.base/java.lang.reflect=ALL-UNNAMED '
+    '--add-opens java.base/java.io=ALL-UNNAMED '
+    '--add-opens java.base/java.net=ALL-UNNAMED '
+    '--add-opens java.base/java.nio=ALL-UNNAMED '
+    '--add-opens java.base/java.util=ALL-UNNAMED '
+    '--add-opens java.base/java.util.concurrent=ALL-UNNAMED '
+    '--add-opens java.base/java.util.concurrent.atomic=ALL-UNNAMED '
+    '--add-opens java.base/sun.nio.ch=ALL-UNNAMED '
+    '--add-opens java.base/sun.nio.cs=ALL-UNNAMED '
+    '--add-opens java.base/sun.security.action=ALL-UNNAMED '
+    '--add-opens java.base/sun.util.calendar=ALL-UNNAMED '
+    'pyspark-shell'
+)
+
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
@@ -9,14 +27,15 @@ from pyspark.ml import Pipeline, PipelineModel
 from pyspark.ml.classification import LogisticRegression
 
 if __name__ == "__main__":
-    # Create spark context
-    sc = SparkContext("local", "pipelines")
-    # Get spark session
-    spark = SparkSession.builder.getOrCreate()
+
+    spark = SparkSession.builder \
+        .appName("pipelines") \
+        .master("local[*]") \
+        .getOrCreate()
 
     # Get the data and place it in a spark dataframe
     data = spark.read.format("csv").option("sep", ";").option("inferSchema", "true").option("header", "true").load(
-        "../Chapter01/classifying/bank_data/bank.csv")
+        "./Chapter01/classifying/bank_data/bank.csv")
 
     # map target to numerical category
     data = data.withColumn('label', f.when((f.col("y") == "yes"), 1).otherwise(0))
