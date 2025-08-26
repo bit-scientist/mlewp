@@ -24,4 +24,4 @@ jobs:
 
       - name: Copy files to bucket with the AWS CLI
         run: |
-          aws s3 cp ./Chapter05/mlewp2-airflow/mwaa-example/dags s3://github-actions-ci-cd-tests --recursive --include "*.py"
+          aws s3 cp ./Chapter05/mlewp2-airflow/mwaa-example/dags s3://github-actions-ci-cd-tests-sokhib --recursive --include "*.py"
